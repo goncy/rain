@@ -1,0 +1,72 @@
+<head>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <a role="button" onclick="changeWeather()">cambiar clima</a>
+  <div id="container"></div>
+  <script>
+    let raining = false
+    let rain = null
+
+    const BOARD = document.getElementById('container')
+
+    BOARD.addEventListener('click', createDrop)
+
+    function createDrop({ x, y }) {
+      const DROP = new Drop(x, y)
+      BOARD.appendChild(DROP)
+      setTimeout(() => BOARD.removeChild(DROP), 1000)
+    }
+
+    function Drop(x, y) {
+      const DEFAULT_WIDTH = 50
+      const DEFAULT_HEIGHT = 50
+
+      this.container = document.createElement('DIV')
+
+      this.container.style.width = DEFAULT_WIDTH
+      this.container.style.height = DEFAULT_HEIGHT
+      this.container.style.position = 'absolute'
+      this.container.style.left = x - (DEFAULT_WIDTH / 2)
+      this.container.style.top = y - (DEFAULT_HEIGHT / 2)
+      this.container.style.zIndex = 0
+
+      this.innerPulse = document.createElement('DIV')
+      this.outerPulse = document.createElement('DIV')
+
+      this.innerPulse.className = 'innerPulse'
+      this.outerPulse.className = 'outerPulse'
+
+      this.container.appendChild(this.innerPulse)
+      this.container.appendChild(this.outerPulse)
+
+      return this.container
+    }
+
+    function changeWeather() {
+      raining
+        ? stopRaining()
+        : startRaining()
+    }
+
+    function stopRaining() {
+      raining = false
+
+      clearInterval(rain)
+    }
+
+    function startRaining() {
+      raining = true
+
+      const getRandomNumber = max => Math.floor(Math.random() * (max + 1))
+
+      rain = setInterval(function () {
+        createDrop({
+          x: getRandomNumber(window.innerWidth),
+          y: getRandomNumber(window.innerHeight)
+        })
+      }, 50)
+    }
+  </script>
+</body>
